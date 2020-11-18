@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'question_provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuestionProvider questionProvider = QuestionProvider();
 
@@ -28,12 +29,49 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> scoreKeeper = [
-    Icon(
-      Icons.check,
-      color: Colors.green,
-    )
-  ];
+  List<Icon> scoreKeeper = [];
+
+  void showRFlutterAlert() {
+    Alert(
+            context: context,
+            title: "Finished!",
+            desc: "You've reached the end of the quiz.")
+        .show();
+  }
+
+  void checkAnswer(bool userPickedAnswer) {
+    bool correctAnswer = questionProvider.getCorrectQuestionAnswer();
+    if (questionProvider.isFinished()) {
+      showRFlutterAlert();
+      setState(
+        () {
+          questionProvider.resetQuestionNumber();
+          scoreKeeper = [];
+        },
+      );
+    } else {
+      setState(
+        () {
+          if (userPickedAnswer == correctAnswer) {
+            scoreKeeper.add(
+              Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+            );
+          } else {
+            scoreKeeper.add(
+              Icon(
+                Icons.close,
+                color: Colors.red,
+              ),
+            );
+          }
+          questionProvider.nextQuestion();
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +109,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(
-                  () {
-                    questionProvider.nextQuestion();
-                  },
-                );
+                checkAnswer(true);
               },
             ),
           ),
@@ -93,11 +127,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                setState(
-                  () {
-                    questionProvider.nextQuestion();
-                  },
-                );
+                checkAnswer(true);
               },
             ),
           ),

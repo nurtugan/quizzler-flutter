@@ -31,13 +31,13 @@ class QuestionProvider {
         true),
   ];
 
-  void nextQuestion() {
-    if (_questionNumber < _questions.length - 1) {
-      _questionNumber++;
-    }
-  }
+  void nextQuestion() => _questionNumber++;
 
   String getQuestionText() => _questions[_questionNumber].text;
 
   bool getCorrectQuestionAnswer() => _questions[_questionNumber].answer;
+
+  bool isFinished() => _questionNumber >= _questions.length - 1;
+
+  void resetQuestionNumber() => _questionNumber = 0;
 }
